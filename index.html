@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stardew Valley — Community Center Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --pixel: 4px;
+  --bg: #1a1a2e;
+  --bg2: #16213e;
+  --bg3: #0f3460;
+  --panel: #1e2a3a;
+  --panel2: #243447;
+  --gold: #f5c842;
+  --gold2: #e8a020;
+  --green: #5db85d;
+  --green2: #3d8b3d;
+  --teal: #4ecdc4;
+  --red: #e74c3c;
+  --orange: #e67e22;
+  --blue: #3498db;
+  --purple: #9b59b6;
+  --pink: #e91e8c;
+  --text: #e8dcc8;
+  --text2: #b0a090;
+  --text3: #7a6a5a;
+  --border: #3a5068;
+  --shadow: rgba(0,0,0,0.5);
+  --spring: #7ecb5f;
+  --summer: #f4d03f;
+  --fall: #e67e22;
+  --winter: #85c1e9;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'VT323', monospace;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+/* PIXEL BORDER MIXIN */
+.pixel-border {
+  box-shadow:
+    0 -4px 0 0 var(--border),
+    0 4px 0 0 var(--border),
+    -4px 0 0 0 var(--border),
+    4px 0 0 0 var(--border);
+}
+
+.pixel-border-gold {
+  box-shadow:
+    0 -4px 0 0 var(--gold),
+    0 4px 0 0 var(--gold),
+    -4px 0 0 0 var(--gold),
+    4px 0 0 0 var(--gold);
+}
+
+/* SCANLINE OVERLAY */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* STARS BACKGROUND */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 60% 10%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 80% 30%, rgba(255,255,255,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 45% 70%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 5% 80%, rgba(255,255,255,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 85%, rgba(255,255,255,0.3) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* HERO */
+.hero {
+  position: relative;
+  background: linear-gradient(180deg, #0a1628 0%, #1a2a4a 40%, #1a3a2a 100%);
+  padding: 60px 20px 50px;
+  text-align: center;
+  overflow: hidden;
+  border-bottom: 4px solid var(--gold);
+}
+
+.hero-grass {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 32px;
+  background: repeating-linear-gradient(
+    90deg,
+    #2d7a3a 0px, #2d7a3a 12px,
+    #3d9a4a 12px, #3d9a4a 16px,
+    #2d7a3a 16px, #2d7a3a 28px,
+    #4aaa5a 28px, #4aaa5a 32px
+  );
+  image-rendering: pixelated;
+}
+
+.hero-moon {
+  position: absolute;
+  top: 20px; right: 60px;
+  width: 48px; height: 48px;
+  background: var(--gold);
+  border-radius: 50%;
+  box-shadow: 0 0 30px rgba(245,200,66,0.4);
+  animation: moonGlow 3s ease-in-out infinite;
+}
+
+@keyframes moonGlow {
+  0%,100% { box-shadow: 0 0 20px rgba(245,200,66,0.4); }
+  50% { box-shadow: 0 0 50px rgba(245,200,66,0.7); }
+}
+
+.hero-stars {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+}
+
+.star {
+  position: absolute;
+  width: 4px; height: 4px;
+  background: white;
+  animation: twinkle var(--dur, 2s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes twinkle {
+  0%,100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+}
+
+.hero-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(14px, 3vw, 24px);
+  color: var(--gold);
+  text-shadow:
+    4px 4px 0 #8b6914,
+    0 0 40px rgba(245,200,66,0.5);
+  margin-bottom: 16px;
+  line-height: 1.6;
+  animation: titleFloat 4s ease-in-out infinite;
+}
+
+@keyframes titleFloat {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.hero-sub {
+  font-size: 22px;
+  color: var(--teal);
+  margin-bottom: 8px;
+  letter-spacing: 2px;
+}
+
+.hero-desc {
+  font-size: 18px;
+  color: var(--text2);
+  margin-bottom: 30px;
+}
+
+/* PROGRESS GLOBAL */
+.global-progress {
+  max-width: 500px;
+  margin: 0 auto 20px;
+}
+
+.progress-label {
+  font-size: 16px;
+  color: var(--gold);
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.progress-track {
+  height: 16px;
+  background: var(--bg2);
+  border: 2px solid var(--border);
+  position: relative;
+  image-rendering: pixelated;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green2), var(--green));
+  transition: width 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: shimmer 2s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* NAV TABS */
+.tabs-container {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg2);
+  border-bottom: 4px solid var(--border);
+  padding: 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabs-container::-webkit-scrollbar { display: none; }
+
+.tabs {
+  display: flex;
+  gap: 0;
+  min-width: max-content;
+}
+
+.tab-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  padding: 14px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text2);
+  cursor: pointer;
+  position: relative;
+  transition: color 0.15s;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+
+.tab-btn::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0; right: 0;
+  height: 4px;
+  background: transparent;
+  transition: background 0.15s;
+}
+
+.tab-btn:hover { color: var(--text); }
+
+.tab-btn.active {
+  color: var(--gold);
+}
+
+.tab-btn.active::after {
+  background: var(--gold);
+}
+
+.tab-btn .tab-icon {
+  margin-right: 6px;
+  font-size: 12px;
+}
+
+/* MAIN CONTENT */
+.main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 16px 80px;
+}
+
+.panel { display: none; }
+.panel.active { display: block; animation: fadeIn 0.2s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* CALLOUT BOXES */
+.callout {
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  border-left: 4px solid;
+  background: var(--panel);
+  font-size: 17px;
+  line-height: 1.5;
+  position: relative;
+}
+
+.callout::before {
+  font-size: 20px;
+  margin-right: 8px;
+}
+
+.callout-info { border-color: var(--teal); color: var(--teal); background: rgba(78,205,196,0.08); }
+.callout-warn { border-color: var(--orange); color: #f0a060; background: rgba(230,126,34,0.1); }
+.callout-success { border-color: var(--green); color: var(--green); background: rgba(93,184,93,0.08); }
+.callout-gold { border-color: var(--gold); color: var(--gold); background: rgba(245,200,66,0.08); }
+
+/* SECTION */
+.section {
+  margin-bottom: 28px;
+}
+
+.section-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--text2);
+  letter-spacing: 1px;
+  padding: 8px 0;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-title-icon {
+  font-size: 18px;
+}
+
+/* CHECKLIST ITEMS */
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 10px;
+  border-bottom: 1px dashed rgba(58,80,104,0.4);
+  transition: background 0.1s;
+}
+
+.item:hover { background: rgba(255,255,255,0.03); }
+.item:last-child { border-bottom: none; }
+
+.item input[type=checkbox] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border);
+  background: var(--bg2);
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 2px;
+  position: relative;
+  transition: all 0.1s;
+  image-rendering: pixelated;
+}
+
+.item input[type=checkbox]:hover {
+  border-color: var(--gold);
+}
+
+.item input[type=checkbox]:checked {
+  background: var(--green2);
+  border-color: var(--green);
+}
+
+.item input[type=checkbox]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: -3px; left: 1px;
+  font-size: 16px;
+  color: white;
+  font-family: 'VT323', monospace;
+}
+
+.item label {
+  font-size: 17px;
+  line-height: 1.5;
+  cursor: pointer;
+  color: var(--text);
+  flex: 1;
+  transition: all 0.15s;
+}
+
+.item label.done {
+  text-decoration: line-through;
+  color: var(--text3);
+}
+
+.item label strong {
+  color: var(--gold);
+  font-weight: 400;
+}
+
+/* TAGS */
+.tag {
+  display: inline-block;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  padding: 3px 6px;
+  border: 1px solid;
+  margin-left: 6px;
+  vertical-align: middle;
+  letter-spacing: 0.5px;
+}
+
+.tag-crop { color: var(--spring); border-color: var(--spring); background: rgba(126,203,95,0.1); }
+.tag-fish { color: var(--blue); border-color: var(--blue); background: rgba(52,152,219,0.1); }
+.tag-forage { color: var(--teal); border-color: var(--teal); background: rgba(78,205,196,0.1); }
+.tag-animal { color: var(--orange); border-color: var(--orange); background: rgba(230,126,34,0.1); }
+.tag-artisan { color: var(--pink); border-color: var(--pink); background: rgba(233,30,140,0.1); }
+.tag-mine { color: #aaa; border-color: #aaa; background: rgba(170,170,170,0.1); }
+.tag-build { color: var(--purple); border-color: var(--purple); background: rgba(155,89,182,0.1); }
+.tag-warn { color: var(--red); border-color: var(--red); background: rgba(231,76,60,0.12); font-size: 8px; }
+
+/* BUNDLE GRID */
+.bundle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.bundle-card {
+  background: var(--panel);
+  border: 2px solid var(--border);
+  padding: 16px;
+  position: relative;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.bundle-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.bundle-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+.bundle-card.p1::before { background: var(--red); }
+.bundle-card.p2::before { background: var(--orange); }
+.bundle-card.p3::before { background: var(--green); }
+
+.bundle-priority {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  padding: 4px 8px;
+  margin-bottom: 10px;
+  display: inline-block;
+  border: 1px solid;
+}
+
+.bundle-card.p1 .bundle-priority { color: var(--red); border-color: var(--red); background: rgba(231,76,60,0.1); }
+.bundle-card.p2 .bundle-priority { color: var(--orange); border-color: var(--orange); background: rgba(230,126,34,0.1); }
+.bundle-card.p3 .bundle-priority { color: var(--green); border-color: var(--green); background: rgba(93,184,93,0.1); }
+
+.bundle-card h3 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--gold);
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+.bundle-card p {
+  font-size: 16px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+/* SEASON HEADER */
+.season-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid var(--border);
+}
+
+.season-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  border: 2px solid;
+  flex-shrink: 0;
+}
+
+.season-spring .season-icon { border-color: var(--spring); background: rgba(126,203,95,0.15); }
+.season-summer .season-icon { border-color: var(--summer); background: rgba(244,208,63,0.15); }
+.season-fall .season-icon { border-color: var(--fall); background: rgba(230,126,34,0.15); }
+.season-winter .season-icon { border-color: var(--winter); background: rgba(133,193,233,0.15); }
+
+.season-info h2 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.season-spring .season-info h2 { color: var(--spring); }
+.season-summer .season-info h2 { color: var(--summer); }
+.season-fall .season-info h2 { color: var(--fall); }
+.season-winter .season-info h2 { color: var(--winter); }
+
+.season-info p { font-size: 17px; color: var(--text2); }
+
+/* MISSABLE ROW */
+.miss-item {
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--red);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.miss-item.warn-orange { border-left-color: var(--orange); }
+.miss-item.warn-purple { border-left-color: var(--purple); }
+.miss-item.warn-blue { border-left-color: var(--blue); }
+
+.miss-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.miss-content h4 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--gold);
+  margin-bottom: 5px;
+  line-height: 1.6;
+}
+
+.miss-content p {
+  font-size: 16px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+/* BUILD ORDER */
+.build-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  transition: background 0.1s;
+}
+
+.build-step:hover { background: var(--panel2); }
+
+.step-num {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: var(--gold);
+  min-width: 36px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.step-content h4 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--text);
+  margin-bottom: 6px;
+  line-height: 1.6;
+}
+
+.step-content p {
+  font-size: 16px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+.step-cost {
+  display: inline-block;
+  font-size: 14px;
+  color: var(--gold);
+  margin-right: 12px;
+}
+
+/* RESET BTN */
+.section-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.reset-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text3);
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.15s;
+}
+
+.reset-btn:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+/* Y2 SECTION */
+.y2-season {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.y2-season-header {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.y2-season-spring { background: rgba(126,203,95,0.1); color: var(--spring); }
+.y2-season-summer { background: rgba(244,208,63,0.1); color: var(--summer); }
+.y2-season-fall { background: rgba(230,126,34,0.1); color: var(--fall); }
+
+.y2-items { padding: 4px 0; }
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 30px;
+  border-top: 2px solid var(--border);
+  color: var(--text3);
+  font-size: 15px;
+}
+
+footer span { color: var(--gold); }
+
+/* PIXEL ART DECORATIONS */
+.pixel-plant {
+  display: inline-block;
+  image-rendering: pixelated;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .hero-title { font-size: 12px; }
+  .tab-btn { font-size: 7px; padding: 12px 10px; }
+  .bundle-grid { grid-template-columns: 1fr; }
+  .section-title { font-size: 8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-stars" id="heroStars"></div>
+  <div class="hero-moon"></div>
+
+  <h1 class="hero-title">★ COMMUNITY CENTER ★<br>COMPLETION GUIDE</h1>
+  <p class="hero-sub">STARDEW VALLEY</p>
+  <p class="hero-desc">Speedrun route • Año 1, Primavera 1 • Ruta Community Center</p>
+
+  <div class="global-progress">
+    <div class="progress-label">
+      <span>PROGRESO TOTAL</span>
+      <span id="globalPct">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="globalFill" style="width:0%"></div>
+    </div>
+    <div style="font-size:15px; color:var(--text3); margin-top:4px; text-align:center;" id="globalCount">0 / 0 ítems completados</div>
+  </div>
+
+  <div class="hero-grass"></div>
+</header>
+
+<!-- TABS -->
+<nav class="tabs-container">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('critical', this)">
+      <span class="tab-icon">🏆</span>Camino Crítico
+    </button>
+    <button class="tab-btn" onclick="switchTab('spring', this)">
+      <span class="tab-icon">🌱</span>Primavera A1
+    </button>
+    <button class="tab-btn" onclick="switchTab('summer', this)">
+      <span class="tab-icon">☀️</span>Verano A1
+    </button>
+    <button class="tab-btn" onclick="switchTab('fall', this)">
+      <span class="tab-icon">🍂</span>Otoño A1
+    </button>
+    <button class="tab-btn" onclick="switchTab('winter', this)">
+      <span class="tab-icon">❄️</span>Invierno A1
+    </button>
+    <button class="tab-btn" onclick="switchTab('year2', this)">
+      <span class="tab-icon">📅</span>Año 2
+    </button>
+    <button class="tab-btn" onclick="switchTab('buildings', this)">
+      <span class="tab-icon">🏗️</span>Edificios
+    </button>
+    <button class="tab-btn" onclick="switchTab('warnings', this)">
+      <span class="tab-icon">⚠️</span>Ítems Únicos
+    </button>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- PANEL: CRITICAL -->
+<div id="panel-critical" class="panel active">
+  <div class="callout callout-info">
+    ⭐ El Invernadero se desbloquea al completar los 6 bundles de La Despensa. Esta es la columna vertebral del speedrun — prioriza La Despensa sobre todo lo demás.
+  </div>
+
+  <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--gold);margin-bottom:16px;">ORDEN DE PRIORIDAD DE BUNDLES</div>
+
+  <div class="bundle-grid">
+    <div class="bundle-card p1">
+      <div class="bundle-priority">PRIORIDAD 1</div>
+      <h3>🏠 La Despensa</h3>
+      <p>Cultivos de Primavera, Verano, Otoño, Cultivos de Calidad, Animales, Artesanal. Completar los 6 desbloquea el Invernadero — el hito más valioso del juego.</p>
+    </div>
+    <div class="bundle-card p1">
+      <div class="bundle-priority">PRIORIDAD 1</div>
+      <h3>⚙️ La Sala de Calderas</h3>
+      <p>Bundles del Herrero, Geólogo y Aventurero. El minecart restaurado ahorra tiempo enorme. Complétala en paralelo con el minado.</p>
+    </div>
+    <div class="bundle-card p2">
+      <div class="bundle-priority">PRIORIDAD 2</div>
+      <h3>🐟 El Acuario</h3>
+      <p>La mayoría de ítems son exclusivos de estación. Empieza a pescar desde el Día 1. Muchos peces tienen ventanas de clima/horario muy estrechas.</p>
+    </div>
+    <div class="bundle-card p2">
+      <div class="bundle-priority">PRIORIDAD 2</div>
+      <h3>🌿 La Sala de Manualidades</h3>
+      <p>Forrajeo de Primavera/Verano/Otoño/Invierno, Construcción, Forrajeo Exótico. Mayormente pasivo — forrajea a diario.</p>
+    </div>
+    <div class="bundle-card p3">
+      <div class="bundle-priority">PRIORIDAD 3</div>
+      <h3>📋 El Tablón de Anuncios</h3>
+      <p>Bundles del Chef, Tintorería, Investigación de Campo, Forraje, Encantador. Muchos ítems abarcan estaciones. Acumula desde el Año 1.</p>
+    </div>
+    <div class="bundle-card p3">
+      <div class="bundle-priority">PRIORIDAD 3</div>
+      <h3>💰 La Caja Fuerte</h3>
+      <p>Solo oro: 2,500g + 5,000g + 10,000g + 25,000g = 42,500g total. Cultiva eficientemente y esto llega solo en el Año 2.</p>
+    </div>
+  </div>
+
+  <div class="callout callout-gold">
+    🌱 Objetivo Invernadero: fin del Otoño Año 1 (si es óptimo) o Primavera Año 2 como máximo. La Caja Fuerte puede ser el último bundle que termines en el Año 2.
+  </div>
+
+  <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--text2);margin-bottom:16px;margin-top:24px;">SECUENCIA DE DESBLOQUEO RECOMENDADA</div>
+
+  <div class="build-step">
+    <div class="step-num">1°</div>
+    <div class="step-content">
+      <h4>Sala de Calderas (Año 1 Verano/Otoño)</h4>
+      <p>Herrero (barras de metal) + Geólogo (gemas) + Aventurero (monstruos). Recompensa: minecart funcional = movilidad enorme.</p>
+    </div>
+  </div>
+  <div class="build-step">
+    <div class="step-num">2°</div>
+    <div class="step-content">
+      <h4>Sala de Manualidades — Forrajeo (a lo largo del Año 1)</h4>
+      <p>Recoge flora de cada estación. Muchos ítems requieren forrajeo activo diario. Construction bundle: madera dura, piedra, etc.</p>
+    </div>
+  </div>
+  <div class="build-step">
+    <div class="step-num">3°</div>
+    <div class="step-content">
+      <h4>La Despensa completa → Invernadero (fin Otoño Año 1)</h4>
+      <p>Todos los cultivos de temporada + animal bundle + artisan bundle. El invernadero transforma la economía del Año 2.</p>
+    </div>
+  </div>
+  <div class="build-step">
+    <div class="step-num">4°</div>
+    <div class="step-content">
+      <h4>Acuario + Tablón de Anuncios (Año 2)</h4>
+      <p>Peces de temporada pendientes + productos de animales exóticos (Conejo, Pato). Usa el carrito viajero para peces difíciles.</p>
+    </div>
+  </div>
+  <div class="build-step">
+    <div class="step-num">5°</div>
+    <div class="step-content">
+      <h4>Caja Fuerte (Año 2 Verano/Otoño)</h4>
+      <p>42,500g totales. Con el invernadero produciendo fruta antigua + vino, esto se consigue cómodamente.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL: SPRING -->
+<div id="panel-spring" class="panel">
+  <div class="season-header season-spring">
+    <div class="season-icon">🌸</div>
+    <div class="season-info">
+      <h2>PRIMAVERA — AÑO 1</h2>
+      <p>Establece tu granja, empieza a minar, y caza peces en días de lluvia sin falta.</p>
+    </div>
+  </div>
+
+  <div class="section-actions">
+    <button class="reset-btn" onclick="resetSection('spring')">↺ RESETEAR SECCIÓN</button>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-title-icon">🌱</span>CULTIVOS A PLANTAR</div>
+    <div class="item"><input type="checkbox" id="sp-c1"><label for="sp-c1"><strong>Chirivías</strong> — plantar Día 1, listas Día 4. Bundle Cultivos Primavera. <span class="tag tag-crop">cultivo</span></label></div>
+    <div class="item"><input type="checkbox" id="sp-c2"><label for="sp-c2"><strong>Judías Verdes</strong> — plantar antes del Día 6 (última cosecha Día 27). Bundle Cultivos Primavera. <span class="tag tag-crop">cultivo</span></label></div>
+    <div class="item"><input type="checkbox" id="sp-c3"><label for="sp-c3"><strong>Coliflor</strong> — plantar antes del Día 8 (cosecha Día 20 mín.). Bundle Cultivos Primavera. <span class="tag tag-crop">cultivo</span><span class="tag tag-warn">⚠ ÚNICO</span></label></div>
+    <div class="item"><input type="checkbox" id="sp-c4"><label for="sp-c4"><strong>Patatas</strong> — para Bundle Cultivos de Calidad (necesitas calidad dorada). <span class="tag tag-crop">cultivo</span></label></div>
+    <div class="item"><input type="checkbox" id="sp-c5"><label for="sp-c5"><strong>Tulipanes y Jazz</strong> — para Bundle Tintorería (Tablón). Última siembra: Día 13. <span class="tag tag-crop">cultivo</span></label></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-title-icon">🎣</span>PECES A PESCAR</div>
+    <div class="callout callout-warn">⚠ En días de lluvia: cancela todo lo demás y pesca. Los peces de lluvia son los más difíciles de recuperar.</div>
+    <div class="item"><input type="checkbox" id="sp-f1"><label for="sp-f1"><strong>Bagre (Catfish)</strong> — Río, <em>solo lluvia</em>, 6am–medianoche. Bundle Pesca Especializada. <span class="tag tag-fish">pesca</span><span class="tag tag-warn">⚠ LLUVIA</span></label></div>
+    <div class="item"><input type="checkbox" id="sp-f2"><label for="sp-f2"><strong>Sabalo (Shad)</strong> — Río, lluvia, 9am–2am. Bundle Peces del Río. <span class="tag tag-fish">pesca</span><span class="tag tag-warn">⚠ LLUVIA</span></label></div>
+    <div class="item"><input type="checkbox" id="sp-f3"><label for="sp-f3"><strong>Anguila (Eel)</strong> — Océano, <em>solo lluvia</em>, 4pm–2am. Bundle Noche/Acuario. <span class="tag tag-fish">pesca</span><span class="tag tag-warn">⚠ LLUVIA + TARDE</span></label></div>
+    <div class="item"><input type="checkbox" id="sp-f4"><label for="sp-f4"><strong>Sardina</strong> — Océano, 6am–7pm. Bundle Peces del Océano. <span class="tag tag-fish">pesca</span></label></div>
+    <div class="item"><input type="checkbox" id="sp-f5"><label for="sp-f5"><strong>Perca (Smallmouth Bass)</strong> — Río, 6am–8pm. Bundle Pesca Lacustre. <span class="tag tag-fish">pesca</span></label></div>
+    <div class="item"><input type="checkbox" id="sp-f6"><label for="sp-f6"><strong>Pez Sol (Sunfish)</strong> — Río, <em>sol solamente</em>, 6am–7pm. Bundle Peces del Río. <span class="tag tag-fish">pesca</span></label></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-title-icon">🍃</span>FORRAJEO</div>
+    <div class="item"><input type="checkbox" id="sp-fo1"><label for="sp-fo1"><strong>Narciso (Daffodil)</strong> — suelo del bosque/granja. Bundle Forrajeo Primavera. <span class="tag tag-forage">forrajeo</span></label></div>
+    <div class="item"><input type="checkbox" id="sp-fo2"><label for="sp-fo2"><strong>Diente de León (Dandelion)</strong> — granja/bosque. Bundle Forrajeo Primavera. <span class="tag tag-forage">forrajeo</span></label></div>
+    <div class="item"><input type="checkbox" id="sp-fo3"><label for="sp-fo3"><strong>Puerro Silvestre (Leek)</strong> — suelo del bosque. Bundle Forrajeo Primavera. <span class="tag tag-forage">forrajeo</span></label></div>
+    <div class="item"><input type="checkbox" id="sp-fo4"><label for="sp-fo4"><strong>Rábano Picante (Wild Horseradish)</strong> — bosque. Bundle Forrajeo Primavera. <span class="tag tag-forage">forrajeo</span><span class="tag tag-warn">⚠ SOLO PRIMAVERA</span></label></div>
+    <div class="item"><input type="checkbox" id="sp-fo5"><label for="sp-fo5"><strong>Cebolleta (Spring Onion)</strong> — sur del Bosque Cindersnap, cada día de primavera. Bundle del Chef. <span class="tag tag-forage">forrajeo</span></label></div>
+    <div class="item"><input type="checkbox" id="sp-fo6"><label for="sp-fo6">Despejar tocones con hacha mejorada (cobre+) para acceder al <strong>Bosque Secreto</strong> → Helecho de Cabeza (verano). <span class="tag tag-forage">forrajeo</span></label></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-title-icon">⛏️</span>MINA / COMBATE</div>
+    <div class="item"><input type="checkbox" id="sp-m1"><label for="sp-m1">Alcanzar <strong>Nivel 40 de la mina</strong> — desbloquea mineral de cobre. <span class="tag tag-mine">mina</span></label></div>
+    <div class="item"><input type="checkbox" id="sp-m2"><label for="sp-m2">Coleccionar <strong>Barra de Cobre ×1</strong> — Bundle del Herrero (Sala de Calderas). <span class="tag tag-mine">mina</span></label></div>
+    <div class="item"><input type="checkbox" id="sp-m3"><label for="sp-m3">Coleccionar <strong>Cristal de Tierra ×1</strong> — pisos 1–39. Bundle del Geólogo. <span class="tag tag-mine">mina</span></label></div>
+    <div class="item"><input type="checkbox" id="sp-m4"><label for="sp-m4">Empezar a acumular <strong>mineral de hierro y oro</strong> para bundles posteriores. <span class="tag tag-mine">mina</span></label></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-title-icon">💰</span>ECONOMÍA / PREPARACIÓN</div>
+    <div class="item"><input type="checkbox" id="sp-e1"><label for="sp-e1">Comprar <strong>Mochila grande</strong> (2,000g) en la tienda de Pierre — más espacio para el inventario. <span class="tag tag-build">prep</span></label></div>
+    <div class="item"><input type="checkbox" id="sp-e2"><label for="sp-e2">Pedir construcción del <strong>Gallinero</strong> (4,000g + 300 madera + 100 piedra) — idealmente Días 7–10. <span class="tag tag-build">edificio</span></label></div>
+    <div class="item"><input type="checkbox" id="sp-e3"><label for="sp-e3">Fabricar <strong>Casa de Abejas</strong> (nivel 3 forrajeo) cuando esté disponible — produce miel para Bundle Artesanal. <span class="tag tag-artisan">artesanal</span></label></div>
+  </div>
+</div>
+
+<!-- PANEL: SUMMER -->
+<div id="panel-summer" class="panel">
+  <div class="season-header season-summer">
+    <div class="season-icon">☀️</div>
+    <div class="season-info">
+      <h2>VERANO — AÑO 1</h2>
+      <p>Temporada de pesca más intensa. Busca activamente el Carrito Viajero los viernes y domingos.</p>
+    </div>
+  </div>
+
+  <div class="section-actions">
+    <button class="reset-btn" onclick="resetSection('summer')">↺ RESETEAR SECCIÓN</button>
+  </div>
+
+  <div class="callout callout-warn">⚠ CARRITO VIAJERO: aparece viernes y domingos en Bosque Cindersnap. Busca semillas de <strong>Col Roja</strong> (única forma en Año 1). Cuesta 1,000–2,000g pero evita esperar hasta Año 2.</div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-title-icon">🌱</span>CULTIVOS A PLANTAR</div>
+    <div class="item"><input type="checkbox" id="su-c1"><label for="su-c1"><strong>Arándanos (Blueberries)</strong> — plantar antes del Día 13 para 2 cosechas. Bundle Cultivos Verano. <span class="tag tag-crop">cultivo</span></label></div>
+    <div class="item"><input type="checkbox" id="su-c2"><label for="su-c2"><strong>Tomates</strong> — plantar antes del Día 11 (multicosecha). Bundle Cultivos Verano. <span class="tag tag-crop">cultivo</span></label></div>
+    <div class="item"><input type="checkbox" id="su-c3"><label for="su-c3"><strong>Melón</strong> — plantar antes del Día 8 (cosecha Día 20). Bundle Verano + Calidad (dorado). <span class="tag tag-crop">cultivo</span><span class="tag tag-warn">⚠ SOLO VERANO</span></label></div>
+    <div class="item"><input type="checkbox" id="su-c4"><label for="su-c4"><strong>Pimiento Picante</strong> — Bundle Verano y Bundle del Chef. <span class="tag tag-crop">cultivo</span></label></div>
+    <div class="item"><input type="checkbox" id="su-c5"><label for="su-c5"><strong>Amapola (Poppy)</strong> — plantar antes del Día 15, Bundle Tintorería. <span class="tag tag-crop">cultivo</span><span class="tag tag-warn">⚠ SOLO VERANO</span></label></div>
+    <div class="item"><input type="checkbox" id="su-c6"><label for="su-c6"><strong>Col Roja</strong> — solo del Carrito Viajero en Año 1. Si la consigues, ¡plántala ya! Bundle Tintorería. <span class="tag tag-crop">cultivo</span><span class="tag tag-warn">⚠ MISSABLE</span></label></div>
+    <div class="item"><input type="checkbox" id="su-c7"><label for="su-c7"><strong>Girasol</strong> — plantar antes del Día 13. Bundle Tintorería. También produce aceite. <span class="tag tag-crop">cultivo</span></label></div>
+    <div class="item"><input type="checkbox" id="su-c8"><label for="su-c8"><strong>Fruta Estrella (Starfruit)</strong> — semillas en Sandy/Oasis (500g c/u). Para Bundle Artesanal vía vino. Plantar antes del Día 13. <span class="tag tag-crop">cultivo</span></label></div>
+    <div class="item"><input type="checkbox" id="su-c9"><label for="su-c9"><strong>Lúpulo (Hops)</strong> — multicosecha, muy rápido. Produce Pale Ale en la barrica. Bundle Artesanal. <span class="tag tag-crop">cultivo</span></label></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-title-icon">🎣</span>PECES A PESCAR</div>
+    <div class="item"><input type="checkbox" id="su-f1"><label for="su-f1"><strong>Pez Globo (Pufferfish)</strong> — Océano, <em>sol</em>, <strong>12pm–4pm EXACTAMENTE</strong>. Bundle Peces del Océano. <span class="tag tag-fish">pesca</span><span class="tag tag-warn">⚠ SOL + MEDIODÍA</span></label></div>
+    <div class="item"><input type="checkbox" id="su-f2"><label for="su-f2"><strong>Atún (Tuna)</strong> — Océano, 6am–7pm. Bundle Peces del Océano. <span class="tag tag-fish">pesca</span></label></div>
+    <div class="item"><input type="checkbox" id="su-f3"><label for="su-f3"><strong>Pargo Rojo (Red Snapper)</strong> — Océano, <em>lluvia</em>, 6am–7pm. Bundle Acuario. <span class="tag tag-fish">pesca</span><span class="tag tag-warn">⚠ LLUVIA</span></label></div>
+    <div class="item"><input type="checkbox" id="su-f4"><label for="su-f4"><strong>Lucio (Pike)</strong> — Río/estanque bosque, 12pm–2am. Bundle Acuario. <span class="tag tag-fish">pesca</span></label></div>
+    <div class="item"><input type="checkbox" id="su-f5"><label for="su-f5"><strong>Tilapia</strong> — Océano, 6am–2pm. Bundle Peces del Océano. <span class="tag tag-fish">pesca</span></label></div>
+    <div class="item"><input type="checkbox" id="su-f6"><label for="su-f6"><strong>Pepino de Mar (Super Cucumber)</strong> — Océano, 6pm–2am. Bundle Pesca Nocturna. <span class="tag tag-fish">pesca</span><span class="tag tag-warn">⚠ NOCHE</span></label></div>
+    <div class="item"><input type="checkbox" id="su-f7"><label for="su-f7"><strong>Pulpo (Octopus)</strong> — Océano, <em>solo verano</em>, 6am–1pm. Bundle Investigación de Campo. <span class="tag tag-fish">pesca</span><span class="tag tag-warn">⚠ SOLO VERANO + MAÑANA</span></label></div>
+    <div class="item"><input type="checkbox" id="su-f8"><label for="su-f8"><strong>Saltarín (Woodskip)</strong> — estanque Bosque Secreto, cualquier estación. Bundle Investigación de Campo. <span class="tag tag-fish">pesca</span></label></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-title-icon">🍃</span>FORRAJEO</div>
+    <div class="item"><input type="checkbox" id="su-fo1"><label for="su-fo1"><strong>Helecho de Cabeza (Fiddlehead Fern)</strong> — Bosque Secreto, <em>solo verano</em>. Bundle Forrajeo Verano. <span class="tag tag-forage">forrajeo</span><span class="tag tag-warn">⚠ SOLO VERANO + BOSQUE SECRETO</span></label></div>
+    <div class="item"><input type="checkbox" id="su-fo2"><label for="su-fo2"><strong>Seta Roja (Red Mushroom)</strong> — Bosque Secreto/bosque. <span class="tag tag-forage">forrajeo</span></label></div>
+    <div class="item"><input type="checkbox" id="su-fo3"><label for="su-fo3"><strong>Uva (Grape)</strong> — Bosque Cindersnap, verano/otoño. Bundle Forrajeo Verano. <span class="tag tag-forage">forrajeo</span></label></div>
+    <div class="item"><input type="checkbox" id="su-fo4"><label for="su-fo4"><strong>Baya Especiada (Spice Berry)</strong> — Bosque Cindersnap, verano. Bundle Forrajeo Verano. <span class="tag tag-forage">forrajeo</span><span class="tag tag-warn">⚠ SOLO VERANO</span></label></div>
+    <div class="item"><input type="checkbox" id="su-fo5"><label for="su-fo5"><strong>Guisante Dulce (Sweet Pea)</strong> — granja/Cindersnap, verano. Bundle Forrajeo Verano. <span class="tag tag-forage">forrajeo</span><span class="tag tag-warn">⚠ SOLO VERANO</span></label></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-title-icon">🐔</span>ANIMALES Y ARTESANAL</div>
+    <div class="item"><input type="checkbox" id="su-a1"><label for="su-a1">Gallinero completo — comprar <strong>Gallina</strong> (800g en Marnie) para iniciar producción de huevos. <span class="tag tag-animal">animal</span></label></div>
+    <div class="item"><input type="checkbox" id="su-a2"><label for="su-a2">Recolectar <strong>Huevo Grande</strong> — necesario para Bundle Animales + Mayonesa Dorada. <span class="tag tag-animal">animal</span></label></div>
+    <div class="item"><input type="checkbox" id="su-a3"><label for="su-a3">Pedir <strong>Mejora: Gallinero Grande</strong> — desbloquea Pato (pluma) y Conejo (pata de conejo). <span class="tag tag-build">edificio</span></label></div>
+    <div class="item"><input type="checkbox" id="su-a4"><label for="su-a4">Colocar <strong>Casa de Abejas</strong> cerca de flores — recolectar <strong>Miel de Flores</strong> para Bundle Artesanal. <span class="tag tag-artisan">artesanal</span></label></div>
+    <div class="item"><input type="checkbox" id="su-a5"><label for="su-a5">Iniciar producción de <strong>Mermelada / Vino / Encurtidos</strong> (Tarro de Conservas + Barrica) para Bundle Artesanal. <span class="tag tag-artisan">artesanal</span></label></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-title-icon">⛏️</span>MINA</div>
+    <div class="item"><input type="checkbox" id="su-m1"><label for="su-m1">Alcanzar <strong>Nivel 80 de la mina</strong> — desbloquea capa de oro, Cristal de Hielo, Aguamarina. <span class="tag tag-mine">mina</span></label></div>
+    <div class="item"><input type="checkbox" id="su-m2"><label for="su-m2">Coleccionar <strong>Barra de Hierro ×1</strong> (pisos 40–79) — Bundle del Herrero. <span class="tag tag-mine">mina</span></label></div>
+    <div class="item"><input type="checkbox" id="su-m3"><label for="su-m3">Coleccionar <strong>Barra de Oro ×1</strong> (pisos 80+) — Bundle del Herrero. <span class="tag tag-mine">mina</span></label></div>
+    <div class="item"><input type="checkbox" id="su-m4"><label for="su-m4">Coleccionar <strong>Aguamarina ×1</strong> — pisos 40–79. Bundle del Geólogo. <span class="tag tag-mine">mina</span></label></div>
+    <div class="item"><input type="checkbox" id="su-m5"><label for="su-m5">Matar <strong>30 Polvillos</strong> (pisos 41–79) y <strong>50 Slimes</strong> — Bundle del Aventurero. <span class="tag tag-mine">mina</span></label></div>
+  </div>
+</div>
+
+<!-- PANEL: FALL -->
+<div id="panel-fall" class="panel">
+  <div class="season-header season-fall">
+    <div class="season-icon">🍂</div>
+    <div class="season-info">
+      <h2>OTOÑO — AÑO 1</h2>
+      <p>Temporada clave para cerrar La Despensa. Cada día cuenta — especialmente los días de lluvia.</p>
+    </div>
+  </div>
+
+  <div class="section-actions">
+    <button class="reset-btn" onclick="resetSection('fall')">↺ RESETEAR SECCIÓN</button>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-title-icon">🌱</span>CULTIVOS A PLANTAR</div>
+    <div class="item"><input type="checkbox" id="fa-c1"><label for="fa-c1"><strong>Calabaza (Pumpkin)</strong> — plantar antes del Día 13 (cosecha Día 26). Bundle Otoño + Calidad (dorada). <span class="tag tag-crop">cultivo</span><span class="tag tag-warn">⚠ SOLO OTOÑO</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-c2"><label for="fa-c2"><strong>Maíz (Corn)</strong> — si plantado en verano continúa en otoño. Bundle Verano Y Bundle Otoño. <span class="tag tag-crop">cultivo</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-c3"><label for="fa-c3"><strong>Berenjena (Eggplant)</strong> — plantar antes del Día 9 para 2 cosechas. Bundle Cultivos Otoño. <span class="tag tag-crop">cultivo</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-c4"><label for="fa-c4"><strong>Ñame (Yam)</strong> — plantar antes del Día 18 (cosecha Día 28). Bundle Cultivos Otoño. <span class="tag tag-crop">cultivo</span><span class="tag tag-warn">⚠ SOLO OTOÑO</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-c5"><label for="fa-c5"><strong>Arándanos Rojos (Cranberries)</strong> — plantar pronto, alto valor multicosecha, rentables para la Caja Fuerte. <span class="tag tag-crop">cultivo</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-c6"><label for="fa-c6"><strong>Col China (Bok Choy)</strong> — Bundle Cultivos Otoño. Plantar antes del Día 22. <span class="tag tag-crop">cultivo</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-c7"><label for="fa-c7"><strong>Amaranto (Amaranth)</strong> — plantar antes del Día 21. Bundle Forraje. <span class="tag tag-crop">cultivo</span><span class="tag tag-warn">⚠ SOLO OTOÑO</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-c8"><label for="fa-c8"><strong>Col Roja</strong> (si obtuviste semilla del carrito) — plantar inmediatamente el Día 1 de Otoño. <span class="tag tag-crop">cultivo</span><span class="tag tag-warn">⚠ SI FALLASTE = AÑO 2</span></label></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-title-icon">🎣</span>PECES A PESCAR</div>
+    <div class="item"><input type="checkbox" id="fa-f1"><label for="fa-f1"><strong>Salmón</strong> — Río, <em>solo otoño</em>, 6am–7pm. Bundle Peces del Río. <span class="tag tag-fish">pesca</span><span class="tag tag-warn">⚠ SOLO OTOÑO</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-f2"><label for="fa-f2"><strong>Trucha Tigre (Tiger Trout)</strong> — Río, otoño/invierno, 6am–7pm. Rara, puede requerir varios intentos. <span class="tag tag-fish">pesca</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-f3"><label for="fa-f3"><strong>Lucioperca (Walleye)</strong> — Río, <em>solo otoño + lluvia</em>, 12pm–2am. Bundle Pesca Nocturna. <span class="tag tag-fish">pesca</span><span class="tag tag-warn">⚠ OTOÑO + LLUVIA</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-f4"><label for="fa-f4"><strong>Albacora (Albacore)</strong> — Océano, 6am–11am o 6pm–2am. Bundle Acuario. <span class="tag tag-fish">pesca</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-f5"><label for="fa-f5"><strong>Bagre (Catfish)</strong> — si te lo perdiste en primavera: Río, lluvia, 6am–medianoche. <span class="tag tag-fish">pesca</span><span class="tag tag-warn">⚠ LLUVIA</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-f6"><label for="fa-f6"><strong>Anguila (Eel)</strong> — si te la perdiste en primavera: Océano, lluvia, 4pm–2am. <span class="tag tag-fish">pesca</span><span class="tag tag-warn">⚠ LLUVIA + TARDE</span></label></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-title-icon">🍃</span>FORRAJEO</div>
+    <div class="item"><input type="checkbox" id="fa-fo1"><label for="fa-fo1"><strong>Seta Común (Common Mushroom)</strong> — granja/bosque. Bundle Forrajeo Otoño. <span class="tag tag-forage">forrajeo</span><span class="tag tag-warn">⚠ SOLO OTOÑO</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-fo2"><label for="fa-fo2"><strong>Ciruela Silvestre (Wild Plum)</strong> — Bosque Cindersnap. Bundle Forrajeo Otoño. <span class="tag tag-forage">forrajeo</span><span class="tag tag-warn">⚠ SOLO OTOÑO</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-fo3"><label for="fa-fo3"><strong>Rebozuelo (Chanterelle)</strong> — bosque. Bundle Forrajeo Otoño. <span class="tag tag-forage">forrajeo</span><span class="tag tag-warn">⚠ SOLO OTOÑO</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-fo4"><label for="fa-fo4"><strong>Avellana (Hazelnut)</strong> — bosque/granja. Bundle Forrajeo Otoño. <span class="tag tag-forage">forrajeo</span><span class="tag tag-warn">⚠ SOLO OTOÑO</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-fo5"><label for="fa-fo5"><strong>Mora (Blackberry)</strong> — Bosque Cindersnap, desde Otoño 8 (desbloqueo por Festival). <span class="tag tag-forage">forrajeo</span><span class="tag tag-warn">⚠ SOLO OTOÑO</span></label></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-title-icon">🐄</span>ANIMALES Y ARTESANAL</div>
+    <div class="item"><input type="checkbox" id="fa-a1"><label for="fa-a1">Recolectar <strong>Lana (Wool)</strong> — Granero Grande + Oveja, o Conejo. Bundle del Encantador. <span class="tag tag-animal">animal</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-a2"><label for="fa-a2">Recolectar <strong>Pluma de Pato</strong> — Pato en Gallinero Grande (necesita 2 corazones). Bundle del Encantador. <span class="tag tag-animal">animal</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-a3"><label for="fa-a3">Producir <strong>Tela (Cloth)</strong> — Lana en telar. Bundle del Encantador. <span class="tag tag-artisan">artesanal</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-a4"><label for="fa-a4">Continuar producción de <strong>Mermelada / Vino / Encurtidos</strong> para Bundle Artesanal. <span class="tag tag-artisan">artesanal</span></label></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-title-icon">⛏️</span>MINA</div>
+    <div class="item"><input type="checkbox" id="fa-m1"><label for="fa-m1">Coleccionar <strong>Cuarzo de Fuego ×1</strong> — pisos 80–119. Bundle del Geólogo. <span class="tag tag-mine">mina</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-m2"><label for="fa-m2">Coleccionar <strong>Diamante ×1</strong> — geoda profunda, cualquier piso. Bundle del Geólogo. <span class="tag tag-mine">mina</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-m3"><label for="fa-m3">Matar <strong>10 Esqueletos</strong> (pisos 70–79 o 100+). Bundle del Aventurero. <span class="tag tag-mine">mina</span></label></div>
+    <div class="item"><input type="checkbox" id="fa-m4"><label for="fa-m4">Completar <strong>Sala de Calderas</strong> si aún no está hecha — recompensa: minecart restaurado. <span class="tag tag-mine">mina</span></label></div>
+  </div>
+
+  <div class="callout callout-success">
+    🎯 Objetivo de fin de Otoño Año 1: Bundle Primavera ✓, Bundle Verano ✓, Bundle Otoño ✓, Calidad ✓, Animal ~90%, Artesanal en proceso. Sala de Calderas ✓. ¡El Invernadero está al alcance!
+  </div>
+</div>
+
+<!-- PANEL: WINTER -->
+<div id="panel-winter" class="panel">
+  <div class="season-header season-winter">
+    <div class="season-icon">❄️</div>
+    <div class="season-info">
+      <h2>INVIERNO — AÑO 1</h2>
+      <p>Sin cultivos al exterior. Enfócate en pesca invernal, forrajeo, mina, y procesamiento artesanal.</p>
+    </div>
+  </div>
+
+  <div class="section-actions">
+    <button class="reset-btn" onclick="resetSection('winter')">↺ RESETEAR SECCIÓN</button>
+  </div>
+
+  <div class="callout callout-info">❄️ Sin cultivos al exterior en invierno. Usa el tiempo para: completar bundles de pesca invernal, forrajear ítems únicos, procesar artesanales, y ahorrar para la Caja Fuerte.</div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-title-icon">🎣</span>PECES A PESCAR</div>
+    <div class="item"><input type="checkbox" id="wi-f1"><label for="wi-f1"><strong>Calamar (Squid)</strong> — Océano, <em>solo invierno</em>, 6pm–2am. Bundle Pesca Nocturna. <span class="tag tag-fish">pesca</span><span class="tag tag-warn">⚠ INVIERNO + NOCHE</span></label></div>
+    <div class="item"><input type="checkbox" id="wi-f2"><label for="wi-f2"><strong>Lingcod</strong> — Río, <em>solo invierno</em>, 6am–7pm. Bundle Peces del Río. <span class="tag tag-fish">pesca</span><span class="tag tag-warn">⚠ SOLO INVIERNO</span></label></div>
+    <div class="item"><input type="checkbox" id="wi-f3"><label for="wi-f3"><strong>Carpa Medianoche (Midnight Carp)</strong> — Río/lago/estanque, otoño/invierno, 10pm–2am. <span class="tag tag-fish">pesca</span><span class="tag tag-warn">⚠ NOCHE TARDÍA</span></label></div>
+    <div class="item"><input type="checkbox" id="wi-f4"><label for="wi-f4"><strong>Pez Glaciar (Glacierfish)</strong> — <em>punta sur del río de Cindersnap</em>, solo invierno, 6am–8pm. Pesca especializada. <span class="tag tag-fish">pesca</span><span class="tag tag-warn">⚠ INVIERNO + UBICACIÓN EXACTA</span></label></div>
+    <div class="item"><input type="checkbox" id="wi-f5"><label for="wi-f5"><strong>Esturión (Sturgeon)</strong> — Lago de la Montaña, verano/invierno, 6am–7pm. Bundle Especializado. <span class="tag tag-fish">pesca</span></label></div>
+    <div class="item"><input type="checkbox" id="wi-f6"><label for="wi-f6"><strong>Sardina</strong> — si te quedó pendiente: Océano, 6am–7pm. <span class="tag tag-fish">pesca</span></label></div>
+    <div class="item"><input type="checkbox" id="wi-f7"><label for="wi-f7"><strong>Bundle Nasas / Crab Pot</strong>: Cangrejo, Bogavante, Cangrejo de Río, Caracol, Mejillón, Almeja, Ostra. Coloca nasas en el río y el océano. <span class="tag tag-fish">pesca</span></label></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-title-icon">🍃</span>FORRAJEO</div>
+    <div class="item"><input type="checkbox" id="wi-fo1"><label for="wi-fo1"><strong>Acebo (Holly)</strong> — Bosque Cindersnap, <em>solo invierno</em>. Bundle Forrajeo Invierno. <span class="tag tag-forage">forrajeo</span><span class="tag tag-warn">⚠ SOLO INVIERNO</span></label></div>
+    <div class="item"><input type="checkbox" id="wi-fo2"><label for="wi-fo2"><strong>Fruta Cristal (Crystal Fruit)</strong> — granja/bosque, solo invierno. Bundle Forrajeo Invierno. <span class="tag tag-forage">forrajeo</span><span class="tag tag-warn">⚠ SOLO INVIERNO</span></label></div>
+    <div class="item"><input type="checkbox" id="wi-fo3"><label for="wi-fo3"><strong>Ñame de Nieve (Snow Yam)</strong> — excavar manchas de gusanos. Bundle Forrajeo Invierno. <span class="tag tag-forage">forrajeo</span><span class="tag tag-warn">⚠ SOLO INVIERNO</span></label></div>
+    <div class="item"><input type="checkbox" id="wi-fo4"><label for="wi-fo4"><strong>Azafrán de Otoño (Crocus)</strong> — granja/bosque, invierno. Bundle Forrajeo Invierno. <span class="tag tag-forage">forrajeo</span><span class="tag tag-warn">⚠ SOLO INVIERNO</span></label></div>
+    <div class="item"><input type="checkbox" id="wi-fo5"><label for="wi-fo5"><strong>Raíz de Invierno (Winter Root)</strong> — excavar manchas de gusanos. Bundle Forrajeo Invierno. <span class="tag tag-forage">forrajeo</span><span class="tag tag-warn">⚠ SOLO INVIERNO</span></label></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-title-icon">🫙</span>ARTESANAL (mantén máquinas activas todo el invierno)</div>
+    <div class="item"><input type="checkbox" id="wi-a1"><label for="wi-a1">Completar ítems del <strong>Bundle Artesanal</strong>: Aceite de Trufa, Vino, Mermelada, Manzana, Encurtidos, Tela, Miel... <span class="tag tag-artisan">artesanal</span></label></div>
+    <div class="item"><input type="checkbox" id="wi-a2"><label for="wi-a2"><strong>Hueva Envejecida (Aged Roe)</strong> — Hueva de Esturión en Tarro de Conservas. Bundle Artesanal. <span class="tag tag-artisan">artesanal</span></label></div>
+    <div class="item"><input type="checkbox" id="wi-a3"><label for="wi-a3"><strong>Pale Ale</strong> — Lúpulo en Barrica. Stock de lúpulo del verano. Bundle Artesanal. <span class="tag tag-artisan">artesanal</span></label></div>
+    <div class="item"><input type="checkbox" id="wi-a4"><label for="wi-a4">Colocar <strong>Grifos en árboles</strong> ahora para reservas del Año 2: Sirope de Arce (Encantador), Resina de Roble (Forrajeo Exótico), Alquitrán de Pino (Construcción). <span class="tag tag-artisan">artesanal</span></label></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-title-icon">🏗️</span>EDIFICIOS A PEDIR</div>
+    <div class="item"><input type="checkbox" id="wi-b1"><label for="wi-b1">Pedir <strong>Granero Grande</strong> (12,000g + 550 madera + 300 piedra) — desbloquea Cabra (leche de cabra) y Oveja (lana). <span class="tag tag-build">edificio</span></label></div>
+    <div class="item"><input type="checkbox" id="wi-b2"><label for="wi-b2">Pedir <strong>Granero de Lujo</strong> si tienes fondos (25,000g) — desbloquea Cerdo para Trufas → Aceite de Trufa. <span class="tag tag-build">edificio</span></label></div>
+    <div class="item"><input type="checkbox" id="wi-b3"><label for="wi-b3">Completar <strong>Caja Fuerte Bundle 1</strong> (2,500g) y <strong>Bundle 2</strong> (5,000g) si el dinero lo permite. <span class="tag tag-build">caja fuerte</span></label></div>
+  </div>
+
+  <div class="callout callout-warn">⚠ Pez Glaciar: párate en la pequeña península sur del Bosque Cindersnap (donde el río se estrecha). Solo invierno. Necesitas nivel 6+ de pesca o buff de comida.</div>
+</div>
+
+<!-- PANEL: YEAR 2 -->
+<div id="panel-year2" class="panel">
+  <div style="font-family:'Press Start 2P',monospace;font-size:13px;color:var(--gold);margin-bottom:12px;padding-bottom:12px;border-bottom:2px solid var(--border);">
+    📅 AÑO 2 — TRAMO FINAL
+  </div>
+
+  <div class="callout callout-success">
+    🌱 En Primavera Año 2 deberías tener el Invernadero. Úsalo INMEDIATAMENTE para Fruta Antigua y Fruta Estrella — producirá vino de alto valor para la Caja Fuerte.
+  </div>
+
+  <div class="y2-season">
+    <div class="y2-season-header y2-season-spring">🌸 PRIMAVERA AÑO 2</div>
+    <div class="y2-items">
+      <div class="section-actions" style="padding:8px 16px 0;"><button class="reset-btn" onclick="resetSection('y2spring')">↺ RESETEAR</button></div>
+      <div class="item"><input type="checkbox" id="y2-s1"><label for="y2-s1">Plantar <strong>Fruta Antigua (Ancient Fruit)</strong> en el Invernadero — fuente de vino de máximo valor. <span class="tag tag-crop">cultivo</span></label></div>
+      <div class="item"><input type="checkbox" id="y2-s2"><label for="y2-s2">Comprar semillas de <strong>Col Roja</strong> en Pierre (Año 2 las vende por primera vez) si no la obtuviste en Año 1. <span class="tag tag-crop">cultivo</span><span class="tag tag-warn">⚠ AÑO 2 SI FALLASTE</span></label></div>
+      <div class="item"><input type="checkbox" id="y2-s3"><label for="y2-s3">Completar <strong>Bundle Nasas</strong> si quedan pendientes — coloca nasas en varias fuentes de agua. <span class="tag tag-fish">pesca</span></label></div>
+      <div class="item"><input type="checkbox" id="y2-s4"><label for="y2-s4">Comprar <strong>Cerdo</strong> en Marnie (16,000g) — produce Trufas → Aceite de Trufa para Bundle Artesanal. <span class="tag tag-animal">animal</span></label></div>
+      <div class="item"><input type="checkbox" id="y2-s5"><label for="y2-s5">Completar <strong>Bundles 1 y 2 de la Caja Fuerte</strong> (2,500g + 5,000g) si no se hicieron en Año 1. <span class="tag tag-build">caja fuerte</span></label></div>
+    </div>
+  </div>
+
+  <div class="y2-season">
+    <div class="y2-season-header y2-season-summer">☀️ VERANO AÑO 2</div>
+    <div class="y2-items">
+      <div class="section-actions" style="padding:8px 16px 0;"><button class="reset-btn" onclick="resetSection('y2summer')">↺ RESETEAR</button></div>
+      <div class="item"><input type="checkbox" id="y2-su1"><label for="y2-su1"><strong>Esturión</strong> en Lago de la Montaña si te lo perdiste en invierno — verano es la otra ventana. <span class="tag tag-fish">pesca</span><span class="tag tag-warn">⚠ VERANO O INVIERNO</span></label></div>
+      <div class="item"><input type="checkbox" id="y2-su2"><label for="y2-su2">Cosechar <strong>Trufas</strong> del Cerdo (forrajeo exterior en días soleados) → Prensa → <strong>Aceite de Trufa</strong>. <span class="tag tag-animal">animal</span></label></div>
+      <div class="item"><input type="checkbox" id="y2-su3"><label for="y2-su3">Completar el <strong>Bundle Artesanal</strong> — Aceite de Trufa, Vino, Mermelada, Encurtidos, Tela, Miel, Pale Ale, Sirope de Arce, Queso de Cabra... (necesitas 6 de los 12). <span class="tag tag-artisan">artesanal</span></label></div>
+      <div class="item"><input type="checkbox" id="y2-su4"><label for="y2-su4">Completar <strong>Bundles 3 y 4 de la Caja Fuerte</strong> (10,000g + 25,000g) — objetivo: fin de verano. <span class="tag tag-build">caja fuerte</span></label></div>
+    </div>
+  </div>
+
+  <div class="y2-season">
+    <div class="y2-season-header y2-season-fall">🍂 OTOÑO AÑO 2 — SPRINT FINAL</div>
+    <div class="y2-items">
+      <div class="section-actions" style="padding:8px 16px 0;"><button class="reset-btn" onclick="resetSection('y2fall')">↺ RESETEAR</button></div>
+      <div class="item"><input type="checkbox" id="y2-fa1"><label for="y2-fa1">Completar cualquier <strong>bundle del Acuario</strong> pendiente — usa el Carrito Viajero para peces difíciles de conseguir. <span class="tag tag-fish">pesca</span></label></div>
+      <div class="item"><input type="checkbox" id="y2-fa2"><label for="y2-fa2">Completar <strong>Tablón de Anuncios</strong> — Chef, Tintorería, Investigación de Campo, Forraje, Encantador. <span class="tag tag-artisan">artesanal</span></label></div>
+      <div class="item"><input type="checkbox" id="y2-fa3"><label for="y2-fa3"><strong>Pluma de Pato</strong> — si el pato no ha producido aún, paciencia; mínimo 2 corazones de amistad y tiempo. <span class="tag tag-animal">animal</span></label></div>
+      <div class="item"><input type="checkbox" id="y2-fa4"><label for="y2-fa4"><strong>Pata de Conejo</strong> — Conejo en Gallinero Grande, drop basado en amistad. Bundle Encantador. <span class="tag tag-animal">animal</span></label></div>
+      <div class="item"><input type="checkbox" id="y2-fa5"><label for="y2-fa5">Último <strong>Bundle de la Caja Fuerte</strong> (25,000g) completado. <strong>¡¡COMMUNITY CENTER RESTAURADO!!</strong> 🎉 <span class="tag tag-build">caja fuerte</span></label></div>
+    </div>
+  </div>
+</div>
+
+<!-- PANEL: BUILDINGS -->
+<div id="panel-buildings" class="panel">
+  <div class="callout callout-info">🏗️ El orden de construcción es crítico. Un error aquí puede retrasarte meses. Sigue esta lista con precisión.</div>
+
+  <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--gold);margin-bottom:16px;">ORDEN ÓPTIMO DE EDIFICIOS</div>
+
+  <div class="build-step">
+    <div class="step-num">1°</div>
+    <div class="step-content">
+      <h4>Gallinero — Primavera Año 1, Días 5–10</h4>
+      <p><span class="step-cost">💰 4,000g + 300 madera + 100 piedra</span><br>Gallinas = huevos = Bundle Animales + Mayonesa. El más urgente.</p>
+    </div>
+  </div>
+  <div class="build-step">
+    <div class="step-num">2°</div>
+    <div class="step-content">
+      <h4>Granero — Verano Año 1</h4>
+      <p><span class="step-cost">💰 6,000g + 350 madera + 150 piedra</span><br>Vaca → Leche → Queso para Bundle Animales. Luego mejoras para Cabra y Oveja.</p>
+    </div>
+  </div>
+  <div class="build-step">
+    <div class="step-num">3°</div>
+    <div class="step-content">
+      <h4>Gallinero Grande (mejora) — Verano/Otoño Año 1</h4>
+      <p><span class="step-cost">💰 10,000g + 400 madera + 150 piedra</span><br>Desbloquea Pato (Pluma de Pato) y Conejo (Pata de Conejo). Bundles Encantador.</p>
+    </div>
+  </div>
+  <div class="build-step">
+    <div class="step-num">4°</div>
+    <div class="step-content">
+      <h4>Granero Grande (mejora) — Otoño/Invierno Año 1</h4>
+      <p><span class="step-cost">💰 12,000g + 550 madera + 300 piedra</span><br>Desbloquea Cabra (Leche de Cabra → Queso) y Oveja (Lana → Tela).</p>
+    </div>
+  </div>
+  <div class="build-step">
+    <div class="step-num">5°</div>
+    <div class="step-content">
+      <h4>Granero de Lujo (mejora) — Invierno Año 1 / Primavera Año 2</h4>
+      <p><span class="step-cost">💰 25,000g + 550 madera + 300 piedra</span><br>Desbloquea Cerdo → Trufa → Aceite de Trufa. Imprescindible para Bundle Artesanal.</p>
+    </div>
+  </div>
+  <div class="build-step">
+    <div class="step-num">🌱</div>
+    <div class="step-content">
+      <h4>Invernadero — NO se construye, se desbloquea</h4>
+      <p>Recompensa por completar los 6 bundles de La Despensa. Objetivo: fin de Otoño Año 1. Transforma la economía.</p>
+    </div>
+  </div>
+
+  <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--gold);margin:24px 0 16px;">MÁQUINAS ARTESANALES (por prioridad)</div>
+
+  <div class="build-step"><div class="step-num" style="font-size:10px">Nv.2</div><div class="step-content"><h4>Máquina de Mayonesa — Nivel Agricultura 2</h4><p><span class="step-cost">15 madera + 15 piedra + 1 barra de cobre</span> — Huevo Grande → Mayonesa Dorada para Bundle Animales.</p></div></div>
+  <div class="build-step"><div class="step-num" style="font-size:10px">Nv.3</div><div class="step-content"><h4>Grifo de Árbol — Nivel Forrajeo 3</h4><p><span class="step-cost">40 madera + 2 barras de cobre</span> — Resina de Roble, Sirope de Arce, Alquitrán de Pino.</p></div></div>
+  <div class="build-step"><div class="step-num" style="font-size:10px">Nv.3</div><div class="step-content"><h4>Casa de Abejas — Nivel Agricultura 3</h4><p><span class="step-cost">40 madera + 8 carbón + 1 sirope + 1 barra hierro</span> — Miel de Flores para Bundle Artesanal.</p></div></div>
+  <div class="build-step"><div class="step-num" style="font-size:10px">Nv.4</div><div class="step-content"><h4>Tarro de Conservas — Nivel Agricultura 4</h4><p><span class="step-cost">50 madera + 40 piedra + 8 carbón</span> — Encurtidos y mermelada. La primera máquina de valor artesanal.</p></div></div>
+  <div class="build-step"><div class="step-num" style="font-size:10px">Nv.6</div><div class="step-content"><h4>Prensa de Queso — Nivel Agricultura 6</h4><p><span class="step-cost">45 madera + 45 piedra + 1 barra cobre</span> — Leche → Queso para Bundle Animales.</p></div></div>
+  <div class="build-step"><div class="step-num" style="font-size:10px">Nv.7</div><div class="step-content"><h4>Telar (Loom) — Nivel Agricultura 7</h4><p><span class="step-cost">60 madera + 30 fibra + 1 alquitrán de pino</span> — Lana → Tela para Bundle Encantador.</p></div></div>
+  <div class="build-step"><div class="step-num" style="font-size:10px">Nv.8</div><div class="step-content"><h4>Barrica (Keg) — Nivel Agricultura 8</h4><p><span class="step-cost">30 madera + 1 cobre + 1 hierro + 1 resina roble</span> — Vino, zumo, cerveza. Alta prioridad para Bundle Artesanal.</p></div></div>
+  <div class="build-step"><div class="step-num" style="font-size:10px">Nv.8</div><div class="step-content"><h4>Prensa de Aceite — Nivel Agricultura 8</h4><p><span class="step-cost">50 madera + 1 barra oro + 20 madera dura</span> — Aceite de Trufa para Bundle Artesanal.</p></div></div>
+</div>
+
+<!-- PANEL: WARNINGS -->
+<div id="panel-warnings" class="panel">
+  <div class="callout callout-warn">
+    ⚠️ Estos son los ítems que más a menudo retrasan un año entero la finalización. Memoriza esta lista.
+  </div>
+
+  <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--red);margin-bottom:16px;">CULTIVOS MISSABLES</div>
+
+  <div class="miss-item">
+    <span class="miss-icon">🥬</span>
+    <div class="miss-content">
+      <h4>Col Roja — SOLO del Carrito Viajero en Año 1</h4>
+      <p>Pierre no vende las semillas hasta el Año 2. Busca el carrito cada viernes y domingo en Bosque Cindersnap. Cuesta 1,000–2,000g pero te ahorra un año completo. Necesaria para Bundle Tintorería.</p>
+    </div>
+  </div>
+  <div class="miss-item warn-orange">
+    <span class="miss-icon">🥦</span>
+    <div class="miss-content">
+      <h4>Coliflor — solo Primavera. Última siembra: Día 8</h4>
+      <p>Si llegas al Día 9 sin haberla plantado, se fue hasta Año 2. Bundle Cultivos Primavera.</p>
+    </div>
+  </div>
+  <div class="miss-item warn-orange">
+    <span class="miss-icon">🍈</span>
+    <div class="miss-content">
+      <h4>Melón — solo Verano. Última siembra: Día 12. Necesitas calidad dorada</h4>
+      <p>Bundle Verano Y Bundle Calidad. Usa fertilizante de calidad para asegurar estrella dorada.</p>
+    </div>
+  </div>
+  <div class="miss-item warn-orange">
+    <span class="miss-icon">🎃</span>
+    <div class="miss-content">
+      <h4>Calabaza — solo Otoño. Última siembra: Día 13. Calidad dorada necesaria</h4>
+      <p>Bundle Otoño Y Bundle Calidad. Si pierdes este plazo, el Bundle Calidad se va al Año 2.</p>
+    </div>
+  </div>
+  <div class="miss-item warn-orange">
+    <span class="miss-icon">🌺</span>
+    <div class="miss-content">
+      <h4>Amaranto — solo Otoño. Última siembra: Día 21</h4>
+      <p>Bundle Forraje (Tablón de Anuncios). Fácil de olvidar entre tanta cosa.</p>
+    </div>
+  </div>
+  <div class="miss-item warn-orange">
+    <span class="miss-icon">🌹</span>
+    <div class="miss-content">
+      <h4>Amapola — solo Verano. Última siembra: Día 15</h4>
+      <p>Bundle Tintorería. No confundirla con otras flores.</p>
+    </div>
+  </div>
+
+  <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--blue);margin:24px 0 16px;">PECES MISSABLES (clima / horario / estación)</div>
+
+  <div class="miss-item warn-blue">
+    <span class="miss-icon">🌧️</span>
+    <div class="miss-content">
+      <h4>Lucioperca (Walleye) — Otoño + lluvia + 12pm–2am ÚNICAMENTE</h4>
+      <p>La combinación más difícil del juego. Si no llueve en otoño no hay otra oportunidad hasta Año 2.</p>
+    </div>
+  </div>
+  <div class="miss-item warn-blue">
+    <span class="miss-icon">☀️</span>
+    <div class="miss-content">
+      <h4>Pez Globo (Pufferfish) — Verano + sol + 12pm–4pm SOLAMENTE</h4>
+      <p>Si el día es lluvioso, inútil. Ventana de solo 4 horas en días soleados de verano.</p>
+    </div>
+  </div>
+  <div class="miss-item warn-blue">
+    <span class="miss-icon">🌧️</span>
+    <div class="miss-content">
+      <h4>Anguila (Eel) — Primavera/Otoño + lluvia + 4pm–2am</h4>
+      <p>Los días de lluvia por la tarde son dorados. Caza la Anguila en el océano en esas noches.</p>
+    </div>
+  </div>
+  <div class="miss-item warn-blue">
+    <span class="miss-icon">🌧️</span>
+    <div class="miss-content">
+      <h4>Bagre (Catfish) — Primavera/Otoño + lluvia + 6am–medianoche</h4>
+      <p>No desperdicies días de lluvia en otras tareas. Este y la Anguila son la prioridad absoluta en lluvia.</p>
+    </div>
+  </div>
+  <div class="miss-item warn-blue">
+    <span class="miss-icon">❄️</span>
+    <div class="miss-content">
+      <h4>Pez Glaciar (Glacierfish) — solo Invierno. Ubicación exacta requerida</h4>
+      <p>Párate en la pequeña peninsula sur del río de Cindersnap. Necesitas nivel 6+ de pesca. No es el río normal.</p>
+    </div>
+  </div>
+  <div class="miss-item warn-blue">
+    <span class="miss-icon">🦑</span>
+    <div class="miss-content">
+      <h4>Calamar (Squid) — solo Invierno, 6pm–2am</h4>
+      <p>Fácil de olvidar si te centras en el Pez Glaciar de día. Sal a pescar al océano cada noche de invierno.</p>
+    </div>
+  </div>
+  <div class="miss-item warn-blue">
+    <span class="miss-icon">🐟</span>
+    <div class="miss-content">
+      <h4>Salmón — solo Otoño, 6am–7pm en el río</h4>
+      <p>Disponible todo el día pero solo en otoño. No confundir con otras estaciones.</p>
+    </div>
+  </div>
+  <div class="miss-item warn-blue">
+    <span class="miss-icon">🐙</span>
+    <div class="miss-content">
+      <h4>Pulpo (Octopus) — solo Verano, 6am–1pm en el océano</h4>
+      <p>Ventana de mañana únicamente. Si te duermes, se fue hasta mañana o hasta el próximo verano.</p>
+    </div>
+  </div>
+
+  <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--teal);margin:24px 0 16px;">FORRAJEO MISSABLE</div>
+
+  <div class="miss-item warn-purple">
+    <span class="miss-icon">🌿</span>
+    <div class="miss-content">
+      <h4>Helecho de Cabeza (Fiddlehead Fern) — Bosque Secreto, SOLO Verano</h4>
+      <p>Necesitas el hacha mejorada (cobre o mejor) para despejar los tocones de entrada. Si no tienes hacha mejorada en Primavera, prioriza la mina para el cobre.</p>
+    </div>
+  </div>
+  <div class="miss-item warn-purple">
+    <span class="miss-icon">❄️</span>
+    <div class="miss-content">
+      <h4>Ítems de Invierno — todos únicos de esa estación</h4>
+      <p>Acebo, Fruta Cristal, Ñame de Nieve, Azafrán, Raíz de Invierno. Forrajea cada día de invierno sin falta. Bundle Forrajeo Invierno depende de todos.</p>
+    </div>
+  </div>
+  <div class="miss-item warn-purple">
+    <span class="miss-icon">🍄</span>
+    <div class="miss-content">
+      <h4>Ítems de Otoño — todos únicos de esa estación</h4>
+      <p>Rebozuelo, Seta Común, Ciruela Silvestre, Avellana, Mora. Pasea por el bosque a diario en otoño.</p>
+    </div>
+  </div>
+
+  <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--orange);margin:24px 0 16px;">PRODUCTOS ANIMALES (requieren tiempo y edificios)</div>
+
+  <div class="miss-item">
+    <span class="miss-icon">🦆</span>
+    <div class="miss-content">
+      <h4>Pluma de Pato — Gallinero Grande + Pato + 2 corazones de amistad</h4>
+      <p>Tarda semanas en conseguirse. Compra el pato lo antes posible y acarícialo/aliméntalo cada día. Drop aleatorio con baja frecuencia.</p>
+    </div>
+  </div>
+  <div class="miss-item">
+    <span class="miss-icon">🐰</span>
+    <div class="miss-content">
+      <h4>Pata de Conejo — Gallinero Grande + Conejo + alta amistad</h4>
+      <p>Tasa de drop muy baja. Cuanto antes compres el conejo y más amistad acumules, antes lo obtendrás. Bundle Encantador.</p>
+    </div>
+  </div>
+  <div class="miss-item">
+    <span class="miss-icon">🐷</span>
+    <div class="miss-content">
+      <h4>Aceite de Trufa — Granero de Lujo + Cerdo + días soleados</h4>
+      <p>Los cerdos no forrajean en invierno ni en días de lluvia. Inícialo en primavera para tener suficiente producción. Bundle Artesanal.</p>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <p>Stardew Valley Community Center Guide • <span>Ruta speedrun</span> • Hecho con ♥</p>
+  <p style="margin-top:8px;">Stardew Valley es obra de <span>ConcernedApe</span></p>
+</footer>
+
+<script>
+const SAVE_KEY = 'sdv_cc_web_v1';
+
+function getState() {
+  try { return JSON.parse(localStorage.getItem(SAVE_KEY) || '{}'); } catch(e) { return {}; }
+}
+
+function saveState(id, checked) {
+  const s = getState();
+  s[id] = checked;
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(s)); } catch(e) {}
+}
+
+function updateProgress() {
+  const all = document.querySelectorAll('input[type=checkbox]');
+  const done = Array.from(all).filter(c => c.checked).length;
+  const pct = all.length ? Math.round(done / all.length * 100) : 0;
+  document.getElementById('globalFill').style.width = pct + '%';
+  document.getElementById('globalPct').textContent = pct + '%';
+  document.getElementById('globalCount').textContent = done + ' / ' + all.length + ' ítems completados';
+}
+
+function updateLabel(cb) {
+  const lbl = cb.nextElementSibling;
+  if (lbl) lbl.classList.toggle('done', cb.checked);
+}
+
+function loadAll() {
+  const s = getState();
+  document.querySelectorAll('input[type=checkbox]').forEach(cb => {
+    if (s[cb.id] !== undefined) {
+      cb.checked = s[cb.id];
+      updateLabel(cb);
+    }
+  });
+  updateProgress();
+}
+
+document.addEventListener('change', e => {
+  if (e.target.type === 'checkbox') {
+    updateLabel(e.target);
+    saveState(e.target.id, e.target.checked);
+    updateProgress();
+  }
+});
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetSection(name) {
+  const panels = {
+    spring: 'panel-spring', summer: 'panel-summer', fall: 'panel-fall',
+    winter: 'panel-winter', y2spring: 'panel-year2', y2summer: 'panel-year2',
+    y2fall: 'panel-year2'
+  };
+  const panelId = panels[name] || 'panel-' + name;
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+  const prefixes = { y2spring: 'y2-s', y2summer: 'y2-su', y2fall: 'y2-fa' };
+  const prefix = prefixes[name];
+  let boxes;
+  if (prefix) {
+    boxes = panel.querySelectorAll(`input[id^="${prefix}"]`);
+  } else {
+    boxes = panel.querySelectorAll('input[type=checkbox]');
+  }
+  boxes.forEach(cb => {
+    cb.checked = false;
+    updateLabel(cb);
+    saveState(cb.id, false);
+  });
+  updateProgress();
+}
+
+// Generate stars in hero
+const starsEl = document.getElementById('heroStars');
+for (let i = 0; i < 40; i++) {
+  const star = document.createElement('div');
+  star.className = 'star';
+  star.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*90}%;--dur:${1.5+Math.random()*3}s;--delay:${Math.random()*3}s`;
+  starsEl.appendChild(star);
+}
+
+loadAll();
+</script>
+</body>
+</html>
